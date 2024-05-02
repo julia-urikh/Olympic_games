@@ -13,20 +13,20 @@ The database has 11 tables that cover all events from the Olympic Games since 18
 ## Structure of the tables
 
 ### Sport 
-List of all types of sports that can be presented at the Olympics
+List of all types of sports that can be presented at the Olympics.<br>
 ![sport](https://github.com/julia-urikh/Olympic_games/blob/main/img/sport.jpg?raw=true)
 ### Event 
-Features of competitions for a particular sport
+Features of competitions for a particular sport.<br>
 ![event](https://github.com/julia-urikh/Olympic_games/blob/main/img/event.jpg?raw=true)
 ### Medal 
-List of possible medals: gold, silver, bronze, and participation
+List of possible medals: gold, silver, bronze, and participation.<br>
 ![medal]()
 ### Competitor_event 
-This table consists entirely of foreing key and combines information about participants, games and events they took part in, and awards they received.
+This table consists entirely of foreing key and combines information about participants, games and events they took part in, and awards they received.<br>
 ![competitor event](https://github.com/julia-urikh/Olympic_games/blob/main/img/competitor_event.jpg?raw=true)
 ### Games_competitor 
-This table also combines information about games and participants. It has information about the age of participants
+This table also combines information about games and participants. It has information about the age of participants.<br>
 ![Games_competitor](https://github.com/julia-urikh/Olympic_games/blob/main/img/games_competitor.jpg?raw=true)
 ### Games 
-The entire list of modern Olympic games
+The entire list of modern Olympic games.<br>
 ![Games](https://github.com/julia-urikh/Olympic_games/blob/main/img/games.jpg?raw=true)
