@@ -121,7 +121,7 @@ WHERE  order_games = 1
 ORDER  BY games_name; 
 ```
  In the results 18506 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/2%20first%20win.jpg?raw=true)
 - The youngest and oldest champions in each sport
 ```
 WITH age
@@ -160,4 +160,4 @@ WHERE  old = 1
 ORDER  BY sport_name; 
 ```
  In the results 203 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/3%20old%20young.jpg?raw=true)
