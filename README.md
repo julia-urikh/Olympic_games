@@ -2,7 +2,7 @@
 
 The modern Olympic Games are sporting events that happen every four years and are attended by participants from different countries. They are not limited to any one sport, but combine a variety of competitions. That is why, since 1924, they have been divided into winter and summer competitions.
 
-Have you ever been interested in the statistics of the Olympic Games? Let's take a look at the database from a great resource and look for answers to some unobvious questions.
+Have you ever been interested in the statistics of the Olympic Games? Let's take a look at the database from a great resource [databasestar.com](https://www.databasestar.com/sample-data-sql/#How_to_Download_Scripts_from_GitHub) and look for answers to some unobvious questions.
 
 The database was created on the basis of mySQL, DBeaver was used for the database management.
 
@@ -23,7 +23,7 @@ The table has 757 rows.<br>
 ### Medal 
 List of possible medals: gold, silver, bronze, and participation.<br>
 The table has 4 rows.<br>
-![medal]()
+![medal](https://github.com/julia-urikh/Olympic_games/blob/main/img/medal.jpg?raw=true)
 ### Competitor_event 
 This table consists of a foreing key and combines information about participants, games and events they took part in, and awards they received.<br>
 The table has 260971 rows.<br>
@@ -56,3 +56,5 @@ The table has 130521 rows.<br>
 Is a list of National Olympic Committee codes and the names of the countries represented. This roughly means which country the participant represented.<br>
 The table has 231 rows.<br>
 ![NOC_region ](https://github.com/julia-urikh/Olympic_games/blob/main/img/noc_region.jpg?raw=true)
+## Queries to the database
+Let's find answers to some questions using SQL
