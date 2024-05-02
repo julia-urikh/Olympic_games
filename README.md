@@ -87,6 +87,7 @@ FROM   noc_region nr
        LEFT JOIN medal m
               ON ce.medal_id = m.id
 GROUP  BY region_name
-ORDER  BY region_name; <br>
+ORDER  BY region_name; 
 ```
-![]()
+ In the results 230 rows<br>
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/1%20partisi.%20of%20country.jpg?raw=true)
