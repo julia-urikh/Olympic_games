@@ -59,7 +59,7 @@ The table has 231 rows.<br>
 ## Queries to the database
 Let's find answers to some questions using SQL
 
--Identify the number of participants and the total number of medals they brought for each country.
+- Identify the number of participants and the total number of medals they brought for each country.
 ```
 SELECT region_name,
        Count(p.id) AS participants,
@@ -91,3 +91,73 @@ ORDER  BY region_name;
 ```
  In the results 230 rows<br>
 ![](https://github.com/julia-urikh/Olympic_games/blob/main/img/1%20partisi.%20of%20country.jpg?raw=true)
+- Which of the participants won medals at their first Olympic Games?
+```
+WITH winner
+     AS (SELECT DISTINCT p.full_name,
+                         g.games_year,
+                         g.games_name,
+                         m.medal_name,
+                         Row_number()
+                           OVER (
+                             partition BY p.id
+                             ORDER BY g.games_year) AS order_games
+         FROM   person p
+                LEFT JOIN games_competitor gc
+                       ON p.id = gc.person_id
+                LEFT JOIN games g
+                       ON g.id = gc.games_id
+                LEFT JOIN competitor_event ce
+                       ON gc.id = ce.competitor_id
+                LEFT JOIN medal m
+                       ON ce.medal_id = m.id)
+SELECT full_name,
+       games_year,
+       games_name,
+       medal_name
+FROM   winner
+WHERE  order_games = 1
+       AND medal_name IN ( 'Bronze', 'Silver', 'Gold' )
+ORDER  BY games_name; 
+```
+ In the results 18506 rows<br>
+![]()
+- The youngest and oldest champions in each sport
+```
+WITH age
+     AS (SELECT DISTINCT s.sport_name,
+                         p.full_name,
+                         gc.age,
+                         Dense_rank ()
+                           OVER (
+                             partition BY s.sport_name
+                             ORDER BY gc.age ASC)  AS young,
+                         Dense_rank ()
+                           OVER (
+                             partition BY s.sport_name
+                             ORDER BY gc.age DESC) AS old
+         FROM   person p
+                LEFT JOIN games_competitor gc
+                       ON p.id = gc.person_id
+                LEFT JOIN competitor_event ce
+                       ON gc.id = ce.competitor_id
+                LEFT JOIN event e
+                       ON ce.event_id = e.id
+                LEFT JOIN sport s
+                       ON e.sport_id = s.id) SELECT sport_name,
+       full_name,
+       age,
+       'youngest' AS status
+FROM   age
+WHERE  young = 1
+UNION
+SELECT sport_name,
+       full_name,
+       age,
+       'oldest' AS status
+FROM   age
+WHERE  old = 1
+ORDER  BY sport_name; 
+```
+ In the results 203 rows<br>
+![]()
