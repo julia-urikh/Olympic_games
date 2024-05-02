@@ -1,4 +1,4 @@
-# Olympic_games <img src="https://drive.google.com/file/d/1_4OwK5CDQhxh6ynOXFYlsZoc6pAJcjYF/view?usp=sharing" width="50">
+# Olympic_games <img src="https://github.com/julia-urikh/Olympic_games/blob/main/img/olympic%20rings.png?raw=true" width="50">
 
 Sport
 This table contains a list of all sports in the Olympics: both summer sports and winter sports.
