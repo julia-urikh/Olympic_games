@@ -2,7 +2,7 @@
 
 The modern Olympic Games are sporting events that happen every four years and are attended by participants from different countries. They are not limited to any one sport, but combine a variety of competitions. That is why, since 1924, they have been divided into winter and summer competitions.
 
-Have you ever been interested in the statistics of the Olympic Games? Let's take a look at the database from a great resource [databasestar.com](https://www.databasestar.com/sample-data-sql/#How_to_Download_Scripts_from_GitHub) and look for answers to some unobvious questions.
+Have you ever been interested in the statistics of the Olympic Games? Let's take a look at the database from a great resource [databasestar.com](https://www.databasestar.com/sample-data-sql/) and look for answers to some unobvious questions.
 
 The database was created on the basis of mySQL, DBeaver was used for the database management.
 
@@ -58,3 +58,35 @@ The table has 231 rows.<br>
 ![NOC_region ](https://github.com/julia-urikh/Olympic_games/blob/main/img/noc_region.jpg?raw=true)
 ## Queries to the database
 Let's find answers to some questions using SQL
+
+-Identify the number of participants and the total number of medals they brought for each country.
+```
+SELECT region_name,
+       Count(p.id) AS participants,
+       Count(CASE medal_name
+               WHEN 'Gold' THEN 1
+               ELSE NULL
+             END)  AS gold,
+       Count(CASE medal_name
+               WHEN 'Silver' THEN 1
+               ELSE NULL
+             END)  AS silver,
+       Count(CASE medal_name
+               WHEN 'Bronze' THEN 1
+               ELSE NULL
+             END)  AS bronze
+FROM   noc_region nr
+       LEFT JOIN person_region pr
+              ON nr.id = pr.region_id
+       LEFT JOIN person p
+              ON pr.person_id = p.id
+       LEFT JOIN games_competitor gc
+              ON p.id = gc.person_id
+       LEFT JOIN competitor_event ce
+              ON gc.id = ce.competitor_id
+       LEFT JOIN medal m
+              ON ce.medal_id = m.id
+GROUP  BY region_name
+ORDER  BY region_name; <br>
+```
+![]()
