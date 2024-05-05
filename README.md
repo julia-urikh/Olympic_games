@@ -91,7 +91,7 @@ ORDER  BY region_name;
 ```
  In the results 230 rows<br>
 ![](https://github.com/julia-urikh/Olympic_games/blob/main/img/1%20partisi.%20of%20country.jpg?raw=true)
-- Which of the participants won medals at their first Olympic Games?
+- <b>Which of the participants won medals at their first Olympic Games?</b>
 ```
 WITH winner
      AS (SELECT DISTINCT p.full_name,
@@ -122,7 +122,7 @@ ORDER  BY games_name;
 ```
  In the results 18506 rows<br>
 ![](https://github.com/julia-urikh/Olympic_games/blob/main/img/2%20first%20win.jpg?raw=true)
-- The youngest and oldest champions in each sport
+- <b>The youngest and oldest champions in each sport.</b>
 ```
 WITH age
      AS (SELECT DISTINCT s.sport_name,
@@ -162,3 +162,185 @@ ORDER  BY sport_name;
 ```
  In the results 203 rows<br>
 ![](https://github.com/julia-urikh/Olympic_games/blob/main/img/3%20old%20young.jpg?raw=true)
+- <b>Count the number of medals by type for each participant</b>
+```
+SELECT p.full_name,
+       m.medal_name,
+       Count(ce.medal_id) AS cnt_medal
+FROM   games_competitor gc
+       LEFT JOIN competitor_event ce
+              ON gc.id = ce.competitor_id
+       LEFT JOIN medal m
+              ON ce.medal_id = m.id
+       LEFT JOIN person p
+              ON gc.person_id = p.id
+GROUP  BY p.full_name,
+          m.medal_name
+HAVING m.medal_name IN ( 'Bronze', 'Silver', 'Gold' )
+ORDER  BY p.full_name,
+          cnt_medal DESC; 
+```
+ In the results 32828 rows<br>
+![]()
+- <b>Participants who took part for two or more countries during different Olympic Games</b>
+```
+WITH rank_reg
+     AS (SELECT DISTINCT p.full_name,
+                         nr.region_name,
+                         Dense_rank ()
+                           OVER (
+                             partition BY p.id
+                             ORDER BY nr.id) AS region_rank
+         FROM   person p
+                LEFT JOIN person_region pr
+                       ON p.id = pr.person_id
+                LEFT JOIN noc_region nr
+                       ON pr.region_id = nr.id),
+     last_reg
+     AS (SELECT full_name,
+                region_name,
+                region_rank
+         FROM   rank_reg
+         WHERE  region_rank >= 2),
+     first_reg
+     AS (SELECT full_name,
+                region_name,
+                region_rank
+         FROM   rank_reg
+         WHERE  region_rank = 1) 
+SELECT *
+FROM   last_reg
+UNION ALL
+SELECT first_reg.full_name,
+       first_reg.region_name,
+       first_reg.region_rank
+FROM   first_reg
+       INNER JOIN last_reg
+               ON first_reg.full_name = last_reg.full_name
+ORDER  BY full_name,
+          region_rank; 
+```
+ In the results 3348 rows<br>
+![]()
+- <b>Who more (women or men) took part in mixed sports and won medals?</b>
+```
+WITH gender
+     AS (SELECT e.event_name,
+                p.gender,
+                Count(p.id) AS cnt_partesipents,
+                Count(CASE m.medal_name
+                        WHEN 'Gold' THEN 1
+                        WHEN 'Silver' THEN 1
+                        WHEN 'Bronze' THEN 1
+                        ELSE NULL
+                      END)  AS cnt_medal
+         FROM   person p
+                LEFT JOIN games_competitor gc
+                       ON p.id = gc.person_id
+                LEFT JOIN competitor_event ce
+                       ON gc.id = ce.competitor_id
+                LEFT JOIN event e
+                       ON ce.event_id = e.id
+                LEFT JOIN medal m
+                       ON m.id = ce.medal_id
+         WHERE  event_name LIKE ( '%Mixed%' )
+         GROUP  BY e.event_name,
+                   p.gender)
+SELECT *,
+       Round(cnt_medal / cnt_partesipents * 100, 1) AS prcnt_winners
+FROM   gender; 
+```
+ In the results 147 rows<br>
+![]()
+- <b>What is the biggest difference in years between each competitor's first and last Olympic Games?</b>
+```
+WITH game_diff
+     AS (SELECT DISTINCT p.id,
+                         p.full_name,
+                         First_value(g.games_year)
+                           OVER (
+                             partition BY p.id
+                             ORDER BY g.games_year ASC)  AS first_games_year,
+                         First_value(g.games_year)
+                           OVER (
+                             partition BY p.id
+                             ORDER BY g.games_year DESC) AS last_games_year
+         FROM   person p
+                LEFT JOIN games_competitor gc
+                       ON p.id = gc.person_id
+                LEFT JOIN games g
+                       ON gc.games_id = g.id
+         ORDER  BY p.id)
+SELECT *,
+       last_games_year - first_games_year AS diff_year
+FROM   game_diff
+WHERE  last_games_year - first_games_year > 0
+ORDER  BY diff_year DESC; 
+```
+ In the results 36688 rows<br>
+![]()
+- <b>Information about Ukrainian Olympic champions. In which city, event and games they won their medals?</b>
+```
+SELECT p.full_name,
+       e.event_name,
+       m.medal_name,
+       g.games_name,
+       c.city_name
+FROM   person p
+       LEFT JOIN person_region pr
+              ON p.id = pr.person_id
+       LEFT JOIN noc_region nr
+              ON pr.region_id = nr.id
+       LEFT JOIN games_competitor gc
+              ON p.id = gc.person_id
+       LEFT JOIN competitor_event ce
+              ON gc.id = ce.competitor_id
+       LEFT JOIN event e
+              ON e.id = ce.event_id
+       LEFT JOIN medal m
+              ON ce.medal_id = m.id
+       LEFT JOIN games g
+              ON g.id = gc.games_id
+       LEFT JOIN games_city gcity
+              ON gcity.games_id = g.id
+       LEFT JOIN city c
+              ON c.id = gcity.city_id
+WHERE  nr.region_name = 'Ukraine'
+       AND m.medal_name IN ( 'Gold', 'Silver', 'Bronze' )
+ORDER  BY full_name,
+          g.games_name; 
+```
+ In the results 245 rows<br>
+![]()
+- <b>The Olympic Games have the most Ukrainian participants</b>
+```
+SELECT g.games_name,
+       c.city_name,
+       Count(p.id) AS ukr_participant
+FROM   games g
+       LEFT JOIN games_city gcity
+              ON gcity.games_id = g.id
+       LEFT JOIN city c
+              ON c.id = gcity.city_id
+       LEFT JOIN games_competitor gc
+              ON g.id = gc.games_id
+       LEFT JOIN person p
+              ON p.id = gc.person_id
+       LEFT JOIN person_region pr
+              ON p.id = pr.person_id
+       LEFT JOIN noc_region nr
+              ON nr.id = pr.region_id
+GROUP  BY g.games_name,
+          nr.region_name,
+          c.city_name
+HAVING nr.region_name = 'Ukraine'
+ORDER  BY ukr_participant DESC; 
+```
+ In the results 17 rows<br>
+![]()
+<!-- - <b></b>
+```
+
+```
+ In the results  rows<br>
+![]() -->
