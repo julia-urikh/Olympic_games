@@ -181,7 +181,7 @@ ORDER  BY p.full_name,
           cnt_medal DESC; 
 ```
  In the results 32828 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/4%20cnt_medal.JPG?raw=true)
 - <b>Participants who took part for two or more countries during different Olympic Games</b>
 ```
 WITH rank_reg
@@ -221,7 +221,7 @@ ORDER  BY full_name,
           region_rank; 
 ```
  In the results 3348 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/5%20diff_games.JPG?raw=true)
 - <b>Who more (women or men) took part in mixed sports and won medals?</b>
 ```
 WITH gender
@@ -251,7 +251,7 @@ SELECT *,
 FROM   gender; 
 ```
  In the results 147 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/6%20woman_man.JPG?raw=true)
 - <b>What is the biggest difference in years between each competitor's first and last Olympic Games?</b>
 ```
 WITH game_diff
@@ -278,7 +278,7 @@ WHERE  last_games_year - first_games_year > 0
 ORDER  BY diff_year DESC; 
 ```
  In the results 36688 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/7%20diff_year.JPG?raw=true)
 - <b>Information about Ukrainian Olympic champions. In which city, event and games they won their medals?</b>
 ```
 SELECT p.full_name,
@@ -311,7 +311,7 @@ ORDER  BY full_name,
           g.games_name; 
 ```
  In the results 245 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/8%20ukr_inform.JPG?raw=true)
 - <b>The Olympic Games have the most Ukrainian participants</b>
 ```
 SELECT g.games_name,
@@ -337,7 +337,7 @@ HAVING nr.region_name = 'Ukraine'
 ORDER  BY ukr_participant DESC; 
 ```
  In the results 17 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/9%20ukr_games.JPG?raw=true)
 <!-- - <b></b>
 ```
 
