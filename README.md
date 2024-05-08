@@ -312,7 +312,7 @@ ORDER  BY full_name,
 ```
  In the results 245 rows<br>
 ![](https://github.com/julia-urikh/Olympic_games/blob/main/img/8%20ukr_inform.JPG?raw=true)
-- <b>The Olympic Games have the most Ukrainian participants</b>
+- <b>The Olympic Games where Ukrainian athletes took part the most</b>
 ```
 SELECT g.games_name,
        c.city_name,
@@ -338,9 +338,37 @@ ORDER  BY ukr_participant DESC;
 ```
  In the results 17 rows<br>
 ![](https://github.com/julia-urikh/Olympic_games/blob/main/img/9%20ukr_games.JPG?raw=true)
-<!-- - <b></b>
+- <b>What sports were added and excluded from the program of the Olympic Games?</b>
 ```
-
+WITH changes
+     AS (SELECT g.games_year,
+                s.sport_name,
+                Lag(s.sport_name)
+                  OVER (
+                    partition BY s.sport_name
+                    ORDER BY g.games_year) AS previous,
+                Lead(s.sport_name)
+                  OVER (
+                    partition BY s.sport_name
+                    ORDER BY g.games_year) AS next_app
+         FROM   games g
+                LEFT JOIN games_competitor gc
+                       ON g.id = gc.games_id
+                LEFT JOIN competitor_event ce
+                       ON gc.id = ce.competitor_id
+                LEFT JOIN event e
+                       ON e.id = ce.event_id
+                LEFT JOIN sport s
+                       ON s.id = e.sport_id)
+SELECT DISTINCT games_year,
+                sport_name,
+                CASE
+                  WHEN previous IS NULL THEN 'added'
+                  WHEN next_app IS NULL THEN 'removed'
+                  ELSE 'continued'
+                END AS status
+FROM   changes
+WHERE  games_year NOT IN ( 2014, 2016 ); 
 ```
- In the results  rows<br>
-![]() -->
+ In the results 936 rows<br>
+![]()
