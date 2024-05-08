@@ -371,4 +371,4 @@ FROM   changes
 WHERE  games_year NOT IN ( 2014, 2016 ); 
 ```
  In the results 936 rows<br>
-![]()
+![](https://github.com/julia-urikh/Olympic_games/blob/main/img/10%20sports_add.JPG?raw=true)
